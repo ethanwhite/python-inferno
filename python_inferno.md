@@ -10,6 +10,7 @@ Table of Contents
 1. Indexing starts at 0, not 1
 2. Dividing one integer by another yeilds an integer (Python 2 only)
 3. Some methods change an object in place and return None
+4. Data type conversion issues
 
 Indexing starts at 0 not 1
 --------------------------
@@ -76,3 +77,32 @@ list where the values in the list are accidentally delected:
     >>> my_list = my_list.sort()
     >>> my_list
     None
+
+Data type conversion issues
+---------------------------
+
+Most data type conversion in Python is seamless (unlike a certain capital letter language),
+but there are still tricky conversions in places.
+
+### Converting a list to a Numpy Structured Array
+
+Lists of lists will not convert to Structured Arrays properly, but lists of Tuples will.
+
+    >>> import numpy as np
+    >>> my_list = [['A', 1], ['B', 2], ['C', 3]]
+    >>> np.array(my_list, dtype={'names': ['ID', 'Value'], 'formats': ['a2', 'i2']})
+    Traceback (most recent call last):
+      File "<string>", line 1, in <fragment>
+    TypeError: expected a readable buffer object
+
+    >>> my_list = [('A', 1), ('B', 2), ('C', 3)]
+    >>> np.array(my_list, dtype={'names': ['ID', 'Value'], 'formats': ['a2', 'i2']})
+    array([('A', 1), ('B', 2), ('C', 3)], 
+          dtype=[('ID', '|S1'), ('Value', '<i2')])
+
+This can be easily addressed using a list comprehension:
+
+    >>> my_list = [['A', 1], ['B', 2], ['C', 3]]
+    >>> my_list = [tuple(row) for row in my_list]
+    >>> my_list
+    [('A', 1), ('B', 2), ('C', 3)]
