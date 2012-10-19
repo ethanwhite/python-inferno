@@ -105,4 +105,4 @@ This can be easily addressed using a list comprehension:
     >>> my_list = [['A', 1], ['B', 2], ['C', 3]]
     >>> my_list = [tuple(row) for row in my_list]
     >>> my_list
-    [('A', 1), ('B', 2), ('C', 3)]
+    [('A', 1), ('B', 2), ('C', 3)][('A', 1), ('B', 2), ('C', 3)]
